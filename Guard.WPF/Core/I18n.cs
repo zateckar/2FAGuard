@@ -13,6 +13,7 @@ namespace Guard.WPF.Core
             {
                 { "system", "System" },
                 { "en", "English" },
+                { "cz", "Czech" },
                 { "de", "Deutsch" },
                 { "zh_cn", "大陆简体" },
                 { "zh_tw", "中文(繁體)" },
