@@ -2,6 +2,9 @@ name: .NET Core Desktop
 
 on:
   workflow_dispatch:
+  push:
+    tags:
+      - "v*.*.*"
 
 jobs:
   build-and-release:
@@ -75,22 +78,17 @@ jobs:
         # Set output variable with the zip file path for the upload step
         Write-Output "artifact_zip_path=$ZIP_PATH" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
       id: zip # Give this step an ID to reference its output
+      
+    - name: Generate release tag
+      id: tag
+      run: |
+        echo "::set-output name=release_tag::UserBuild_$(date +"%Y.%m.%d_%H-%M")"
 
     - name: Create GitHub Release and Upload Artifact
       uses: softprops/action-gh-release@v2 # Use v2 or latest stable
-      if: startsWith(github.ref, 'refs/tags/')
       with:
-        # The files or patterns to upload. Use the output from the zip step.
         files: ${{ steps.zip.outputs.artifact_zip_path }}
-        # Optional: Set to true to automatically generate release notes
-        # based on commits since the last tag.
-        # generate_release_notes: true
-        # Optional: Define a release name (defaults to the tag name)
-        # name: Release ${{ github.ref_name }}
-        # Optional: Define body content for the release notes
-        # body: |
-        #   This is release ${{ github.ref_name }}
-        #   Built from commit ${{ github.sha }}
+        tag_name: ${{ steps.tag.outputs.release_tag }}
       env:
         # This token is provided by Actions, Permissions must be set for it to work
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
