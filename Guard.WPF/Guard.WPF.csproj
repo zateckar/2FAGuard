@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows10.0.22621.0</TargetFramework>
- 	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
+<RuntimeIdentifier>win-x64;win-x86</RuntimeIdentifier>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
@@ -31,7 +31,6 @@
 	<ApplicationManifest>app.manifest</ApplicationManifest>
 	<StartupObject>Guard.WPF.Program</StartupObject>
 	<PackageProjectUrl>https://2faguard.app</PackageProjectUrl>
-	  
 	<!-- https://github.com/dotnet/sdk/issues/44026 -->
     <CsWinRTAotOptimizerEnabled>false</CsWinRTAotOptimizerEnabled>
   </PropertyGroup>
