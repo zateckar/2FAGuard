@@ -42,23 +42,95 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: windows-latest  # For a list of available runner types, refer to
-                             # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
+  build-and-release:
+    name: Build, Zip, and Release
+    runs-on: windows-latest # WPF requires Windows
+
     steps:
-    - name: Checkout
+    - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Publish .NET Package
-      uses: yashmahi88/publish-.net@v1
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: '8.0.x' # Use .NET 8
 
-    # Restore the application to populate the obj folder with RuntimeIdentifiers
-    #- name: Restore the application
-    #  run: dotnet publish -r win-x64 -c Release --p:PublishSingleFile=true --self-contained true -o bin\publish
+    # Optional: If your project/solution isn't in the root, uncomment and set the path
+    # - name: Set working directory
+    #   run: cd src/YourAppDirectory # Example path
+    #   shell: bash
 
-    #- name: .NET Core CLI
-    #  uses: baruchiro/github-actions@0.0.1
+    - name: Get Project Name and Path
+      id: get_project
+      shell: pwsh
+      run: |
+        $csprojPath = Get-ChildItem -Filter *.csproj -Recurse | Select-Object -First 1
+        if ($null -eq $csprojPath) {
+          Write-Error "Could not find .csproj file."
+          exit 1
+        }
+        $projectName = [System.IO.Path]::GetFileNameWithoutExtension($csprojPath.FullName)
+        $projectDir = Split-Path $csprojPath.FullName -Parent
+        Write-Host "Project Name: $projectName"
+        Write-Host "Project Path: $($csprojPath.FullName)"
+        Write-Output "project_name=$projectName" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+        Write-Output "project_path=$($csprojPath.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+    - name: Restore dependencies
+      run: dotnet restore "${{ steps.get_project.outputs.project_path }}"
+
+    - name: Build and publish WPF application
+      shell: pwsh
+      run: |
+        $PROJECT_PATH = "${{ steps.get_project.outputs.project_path }}"
+        $OUTPUT_PATH = "./publish" # Relative path for published files
+        $CONFIGURATION = "Release"
+        $FRAMEWORK = "net8.0-windows" # Target framework for WPF
+        $RUNTIME = "win-x64"        # Target runtime (e.g., win-x64, win-x86)
+        $SELF_CONTAINED = "true"    # true: include .NET runtime; false: require runtime installed
+
+        Write-Host "Publishing project: $PROJECT_PATH"
+        dotnet publish $PROJECT_PATH --configuration $CONFIGURATION --framework $FRAMEWORK --runtime $RUNTIME --self-contained $SELF_CONTAINED -o $OUTPUT_PATH /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true # Creates a single .exe (optional, remove /p:PublishSingleFile... if not desired)
+        # Add other build options if needed, e.g.:
+        # /p:PublishReadyToRun=true  # Pre-compile for faster startup
+        # /p:PublishTrimmed=false    # Set true to trim unused assemblies (test thoroughly!)
+
+        Write-Host "Build output published to $OUTPUT_PATH"
+        # Set output path for the next step
+        Write-Output "artifact_output_path=$OUTPUT_PATH" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+      id: publish # Give this step an ID to reference its output
+
+    - name: Zip the artifact
+      shell: pwsh
+      run: |
+        $PROJECT_NAME = "${{ steps.get_project.outputs.project_name }}"
+        # Use GitHub's ref_name which holds the tag name (e.g., v1.0.0)
+        $ARTIFACT_NAME = "$PROJECT_NAME-${{ github.ref_name }}"
+        $OUTPUT_PATH = "${{ steps.publish.outputs.artifact_output_path }}"
+        $ZIP_PATH = "$ARTIFACT_NAME.zip"
+
+        Compress-Archive -Path "$OUTPUT_PATH\*" -DestinationPath $ZIP_PATH -Force
+        Write-Host "Created artifact: $ZIP_PATH"
+        # Set output variable with the zip file path for the upload step
+        Write-Output "artifact_zip_path=$ZIP_PATH" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+      id: zip # Give this step an ID to reference its output
+
+    - name: Create GitHub Release and Upload Artifact
+      uses: softprops/action-gh-release@v2 # Use v2 or latest stable
+      with:
+        # The files or patterns to upload. Use the output from the zip step.
+        files: ${{ steps.zip.outputs.artifact_zip_path }}
+        # Optional: Set to true to automatically generate release notes
+        # based on commits since the last tag.
+        # generate_release_notes: true
+        # Optional: Define a release name (defaults to the tag name)
+        # name: Release ${{ github.ref_name }}
+        # Optional: Define body content for the release notes
+        # body: |
+        #   This is release ${{ github.ref_name }}
+        #   Built from commit ${{ github.sha }}
+      env:
+        # This token is provided by Actions, Permissions must be set for it to work
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   
