@@ -26,11 +26,7 @@ jobs:
       id: get_project
       shell: pwsh
       run: |
-        $csprojPath = Get-ChildItem -Filter *.csproj -Recurse | Select-Object -First 1
-        if ($null -eq $csprojPath) {
-          Write-Error "Could not find .csproj file."
-          exit 1
-        }
+        $csprojPath = Guard.WPF\Guard.WPF.csproj
         $projectName = [System.IO.Path]::GetFileNameWithoutExtension($csprojPath.FullName)
         $projectDir = Split-Path $csprojPath.FullName -Parent
         Write-Host "Project Name: $projectName"
