@@ -81,11 +81,17 @@ jobs:
     # - name: Execute unit tests
      #  run: dotnet test
 
+    - name: Publish .NET Package
+      uses: yashmahi88/publish-.net@v1
+      with:
+        dotnet-version: 8.0.x
+
     # Restore the application to populate the obj folder with RuntimeIdentifiers
     - name: Restore the application
-      run: msbuild $env:Solution_Name /t:Restore /p:Configuration=$env:Configuration
-      env:
-        Configuration: ${{ matrix.configuration }}
+      run: dotnet publish -r win-x64 -c Release --p:PublishSingleFile=true --self-contained true -o bin\publish
+
+    - name: .NET Core CLI
+      uses: baruchiro/github-actions@0.0.1
 
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Decode the pfx
