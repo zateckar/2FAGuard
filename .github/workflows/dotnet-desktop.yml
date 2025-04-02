@@ -26,7 +26,7 @@ jobs:
       id: get_project
       shell: pwsh
       run: |
-        $csprojPath = Guard.WPF\Guard.WPF.csproj
+        $csprojPath = "Guard.WPF\Guard.WPF.csproj"
         $projectName = [System.IO.Path]::GetFileNameWithoutExtension($csprojPath.FullName)
         $projectDir = Split-Path $csprojPath.FullName -Parent
         Write-Host "Project Name: $projectName"
