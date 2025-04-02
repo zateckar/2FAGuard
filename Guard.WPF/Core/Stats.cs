@@ -67,15 +67,15 @@ namespace Guard.WPF.Core
                     locale = InstallationContext.GetLocaleCode()
                 };
                 var httpClient = HTTP.GetHttpClient();
-                var response =
-                    await httpClient.PostAsJsonAsync(statsApiUrl, content, jsonSerializerOptions)
-                    ?? throw new Exception("Failed to get update info (is null)");
+                //var response =
+                  //  await httpClient.PostAsJsonAsync(statsApiUrl, content, jsonSerializerOptions)
+                   // ?? throw new Exception("Failed to get update info (is null)");
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new Exception(
-                        $"Failed to get update info (status code: {response.StatusCode})"
-                    );
+                //if (!response.IsSuccessStatusCode)
+                //{
+                 //   throw new Exception(
+                  //      $"Failed to get update info (status code: {response.StatusCode})"
+                   // );
                 }
 
                 if (type == EventType.AppStarted)
