@@ -11,6 +11,7 @@
     {
         System,
         EN,
+        CS,
         DE,
         ZH_CN,
         ZH_TW,
