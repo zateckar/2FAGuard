@@ -31,6 +31,7 @@ namespace Guard.WPF.Core.Installation
 
         internal static async Task<UpdateInfo?> CheckForUpdate()
         {
+            /*
             Version? currentVersion = System
                 .Reflection.Assembly.GetExecutingAssembly()
                 .GetName()
@@ -69,7 +70,9 @@ namespace Guard.WPF.Core.Installation
                 lastUpdateInfo = null;
                 Log.Logger.Error("Error while checking for updates: {0}", e.Message);
                 return null;
-            }
+            }*/
+
+             return null;
         }
 
         // Checks if the file is signed with a valid code signing certificate
