@@ -35,6 +35,8 @@ namespace Guard.WPF.Core
 
         internal static async void TrackEvent(EventType type)
         {
+            return;
+            /*
             if (InstallationInfo.IsInDebugMode())
             {
                 return;
@@ -88,6 +90,7 @@ namespace Guard.WPF.Core
             {
                 //
             }
+            */
         }
     }
 }
