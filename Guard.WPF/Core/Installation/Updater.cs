@@ -181,7 +181,7 @@ namespace Guard.WPF.Core.Installation
                 });
                 startFilePath = portableExePath;
                 arguments = $"--updated-from {InstallationContext.GetVersionString()} --portable";
-                */
+                
             }
 
             if (!IsFileTrusted(startFilePath))
@@ -202,6 +202,7 @@ namespace Guard.WPF.Core.Installation
             };
             process.Start();
             Application.Current.Shutdown();
+            */
         }
     }
 }
