@@ -70,7 +70,7 @@ namespace Guard.WPF.Core
 
         private static async void SendBugReport(string errorStack)
         {
-            try
+            /*try
             {
                 var content = new
                 {
@@ -110,7 +110,7 @@ namespace Guard.WPF.Core
                     CloseButtonText = I18n.GetString("dialog.close"),
                     MaxWidth = 400
                 }.ShowDialogAsync();
-            }
+            }*/
         }
 
         private static string GetGitHubIssueUrl(string errorStack)
