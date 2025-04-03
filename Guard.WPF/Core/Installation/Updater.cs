@@ -86,7 +86,7 @@ namespace Guard.WPF.Core.Installation
         }
 
         internal static async Task Update(UpdateInfo updateInfo)
-        {
+        { /*
             bool isPortable = InstallationContext.IsPortable();
             string downloadUrl = isPortable ? updateInfo.Urls.Portable : updateInfo.Urls.Installer;
 
@@ -180,6 +180,7 @@ namespace Guard.WPF.Core.Installation
                 });
                 startFilePath = portableExePath;
                 arguments = $"--updated-from {InstallationContext.GetVersionString()} --portable";
+                */
             }
 
             if (!IsFileTrusted(startFilePath))
