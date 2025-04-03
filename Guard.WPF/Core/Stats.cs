@@ -85,12 +85,9 @@ namespace Guard.WPF.Core
                     SettingsManager.Settings.LastAppStartEvent = DateTime.Now;
                     _ = SettingsManager.Save();
                 }
-            }
-            catch
-            {
-                //
-            }
             */
+            }
+            
         }
     }
 }
