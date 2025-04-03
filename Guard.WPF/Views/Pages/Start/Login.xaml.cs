@@ -24,7 +24,7 @@ namespace Guard.WPF.Views.Pages.Start
             InitializeComponent();
             PasswordBox.Focus();
             mainWindow = (MainWindow)Application.Current.MainWindow;
-            CheckForUpdate();
+            //CheckForUpdate();
             Setup(true);
         }
 
@@ -33,7 +33,7 @@ namespace Guard.WPF.Views.Pages.Start
             InitializeComponent();
             PasswordBox.Focus();
             mainWindow = (MainWindow)Application.Current.MainWindow;
-            CheckForUpdate();
+            //CheckForUpdate();
             Setup(promptWinHello);
         }
 
