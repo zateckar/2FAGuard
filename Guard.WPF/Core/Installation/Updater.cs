@@ -86,8 +86,9 @@ namespace Guard.WPF.Core.Installation
         }
 
         internal static async Task Update(UpdateInfo updateInfo)
-        { /*
+        { 
             bool isPortable = InstallationContext.IsPortable();
+            /*
             string downloadUrl = isPortable ? updateInfo.Urls.Portable : updateInfo.Urls.Installer;
 
             string downloadFileName = Path.GetFullPath(
