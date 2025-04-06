@@ -36,7 +36,7 @@
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </ui:CardAction>
-            <ui:CardAction
+            <!--<ui:CardAction
                 Width="350"
                 Height="95"
                 Margin="0,15,15,0"
@@ -54,7 +54,7 @@
                         Text="{DynamicResource i.export.uri.description}"
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
-            </ui:CardAction>
+            </ui:CardAction>-->
             <ui:CardAction
                 Width="350"
                 Height="95"

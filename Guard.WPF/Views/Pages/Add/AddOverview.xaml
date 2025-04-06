@@ -120,7 +120,7 @@
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </ui:CardAction>
-            <ui:CardAction
+            <!--<ui:CardAction
                 Width="350"
                 Height="95"
                 Margin="0,15,15,0"
@@ -138,8 +138,8 @@
                         Text="{DynamicResource i.import.uri.description}"
                         TextWrapping="WrapWithOverflow" />
                 </StackPanel>
-            </ui:CardAction>
-            <ui:CardAction
+            </ui:CardAction>-->
+            <!--<ui:CardAction
                 Width="350"
                 Height="95"
                 Margin="0,15,15,0"
@@ -190,7 +190,7 @@
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </Grid>
-            </ui:CardAction>
+            </ui:CardAction>-->
             <ui:CardAction
                 Width="350"
                 Height="95"
@@ -217,7 +217,7 @@
                     </StackPanel>
                 </Grid>
             </ui:CardAction>
-            <ui:CardAction
+            <!--<ui:CardAction
                 Width="350"
                 Height="95"
                 Margin="0,15,15,0"
@@ -268,7 +268,7 @@
                             TextWrapping="WrapWithOverflow" />
                     </StackPanel>
                 </Grid>
-            </ui:CardAction>
+            </ui:CardAction>-->
         </WrapPanel>
     </StackPanel>
 </Page>
