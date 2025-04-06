@@ -45,13 +45,13 @@ jobs:
       shell: pwsh
       run: |
         $PROJECT_PATH = "${{ steps.get_project.outputs.project_path }}"
-        $OUTPUT_PATH = "./publish" # Relative path for published files
+        $OUTPUT_PATH = "./publish/dist" # Relative path for published files
         $CONFIGURATION = "Release"
         $RUNTIME = "win-x64"        # Target runtime (e.g., win-x64, win-x86)
         $SELF_CONTAINED = "true"    # true: include .NET runtime; false: require runtime installed
 
         Write-Host "Publishing project: $PROJECT_PATH"
-        dotnet publish $PROJECT_PATH --configuration $CONFIGURATION --runtime $RUNTIME --self-contained $SELF_CONTAINED -o $OUTPUT_PATH /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true # Creates a single .exe (optional, remove /p:PublishSingleFile... if not desired)
+        dotnet publish $PROJECT_PATH --configuration $CONFIGURATION --runtime $RUNTIME --self-contained $SELF_CONTAINED -o $OUTPUT_PATH /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true /p:IsPortable=true # Creates a single .exe (optional, remove /p:PublishSingleFile... if not desired)
         # Add other build options if needed, e.g.:
         # /p:PublishReadyToRun=true  # Pre-compile for faster startup
         # /p:PublishTrimmed=false    # Set true to trim unused assemblies (test thoroughly!)
@@ -60,6 +60,9 @@ jobs:
         # Set output path for the next step
         Write-Output "artifact_output_path=$OUTPUT_PATH" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
       id: publish # Give this step an ID to reference its output
+
+    - name: Sign
+      run: signtool.exe sign /sha1 0839626A858F4D2E44EDC99708362609E432DA5A /t "http://time.certum.pl/" /fd sha256 /d "2FAGuard" /du "https://2faguard.app" "$OUTPUT_PATH\2FAGuard.exe"
 
     - name: Zip the artifact
       shell: pwsh
