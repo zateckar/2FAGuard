@@ -17,8 +17,10 @@ jobs:
       with:
         dotnet-version: '8.0.x' # Use .NET 8
         
-    - name: Install SignTool
-      run: dotnet add package Microsoft.Windows.SDK.BuildTools       
+    - uses: ChristopheLav/windows-sdk-install@v1
+      with:
+        version-sdk: 26100
+        features: 'OptionId.UWPCPP,OptionId.DesktopCPParm64,OptionId.SigningTools' 
 
     # Optional: If your project/solution isn't in the root, uncomment and set the path
     # - name: Set working directory
