@@ -1,4 +1,4 @@
-name: .NET Core Desktop
+name: .NET Desktop
 
 on:
   workflow_dispatch:
@@ -16,6 +16,9 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '8.0.x' # Use .NET 8
+        
+    - name: Install SignTool
+      run: dotnet add package Microsoft.Windows.SDK.BuildTools       
 
     # Optional: If your project/solution isn't in the root, uncomment and set the path
     # - name: Set working directory
