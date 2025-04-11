@@ -56,7 +56,7 @@ jobs:
         $SELF_CONTAINED = "true"    # true: include .NET runtime; false: require runtime installed
 
         Write-Host "Publishing project: $PROJECT_PATH"
-        dotnet publish $PROJECT_PATH --configuration $CONFIGURATION --runtime $RUNTIME --self-contained $SELF_CONTAINED -o $OUTPUT_PATH /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true /p:IsPortable=true # Creates a single .exe (optional, remove /p:PublishSingleFile... if not desired)
+        dotnet publish $PROJECT_PATH --configuration $CONFIGURATION --runtime $RUNTIME --self-contained $SELF_CONTAINED -o $OUTPUT_PATH /p:PublishSingleFile=true /p:IncludeNativeLibrariesForSelfExtract=true /p:IsPortable=false # Creates a single .exe (optional, remove /p:PublishSingleFile... if not desired)
         # Add other build options if needed, e.g.:
         # /p:PublishReadyToRun=true  # Pre-compile for faster startup
         # /p:PublishTrimmed=false    # Set true to trim unused assemblies (test thoroughly!)
