@@ -216,7 +216,7 @@ namespace Guard.WPF.Core.Import.Importer
             ReadOnlySpan<byte> keyBytes = new Rfc2898DeriveBytes(
                 pass,
                 salt,
-                10000,
+                100000,
                 HashAlgorithmName.SHA256
             ).GetBytes(32);
 
