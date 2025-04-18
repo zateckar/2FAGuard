@@ -24,19 +24,19 @@ namespace Guard.WPF.Core.Import.Importer
             byte[] data = File.ReadAllBytes(path);
             if (data.Length == 0)
             {
-                throw new Exception("The file does not contain any data.");
+                throw new FormatException("The file does not contain any data.");
             }
 
             var json = Encoding.UTF8.GetString(data);
             var backup =
                 JsonSerializer.Deserialize<TwoFasBackup>(json, jsonSerializerOptions)
-                ?? throw new Exception(
+                ?? throw new FormatException(
                     "Failed to parse the 2FAS backup file. JSON deserialization failed."
                 );
 
             if (backup.SchemaVersion != 4)
             {
-                throw new Exception(
+                throw new FormatException(
                     $"Unsupported 2FAS backup schema version: {backup.SchemaVersion}"
                 );
             }
@@ -51,14 +51,14 @@ namespace Guard.WPF.Core.Import.Importer
             {
                 if (backup.Services == null || backup.Services.Length == 0)
                 {
-                    throw new Exception("The 2FAS backup file does not contain any services.");
+                    throw new FormatException("The 2FAS backup file does not contain any services.");
                 }
                 services = backup.Services;
             }
 
             if (services == null)
             {
-                throw new Exception(
+                throw new FormatException(
                     "Failed to parse the 2FAS backup file because it does not contain any services."
                 );
             }
@@ -73,7 +73,7 @@ namespace Guard.WPF.Core.Import.Importer
             {
                 if (service.OTP == null)
                 {
-                    throw new Exception("Invalid 2FAS backup format: OTP object not found");
+                    throw new FormatException("Invalid 2FAS backup format: OTP object not found");
                 }
 
                 string issuer;
@@ -93,7 +93,7 @@ namespace Guard.WPF.Core.Import.Importer
 
                 if (service.Secret == null)
                 {
-                    throw new Exception("Invalid 2FAS backup: No secret found");
+                    throw new ArgumentNullException("Invalid 2FAS backup: No secret found");
                 }
 
                 TotpIcon icon = IconManager.GetIcon(issuer, IconType.Any);
@@ -104,7 +104,7 @@ namespace Guard.WPF.Core.Import.Importer
                     {
                         throw new Exception(I18n.GetString("i.import.hotp.notsupported"));
                     }
-                    throw new Exception(
+                    throw new FormatException(
                         $"Only TOTP tokens are supported. Backup contains {service.OTP?.TokenType} token."
                     );
                 }
@@ -113,7 +113,7 @@ namespace Guard.WPF.Core.Import.Importer
 
                 if (!OTPUriParser.IsValidSecret(normalizedSecret))
                 {
-                    throw new Exception($"{I18n.GetString("td.invalidsecret")} ({issuer})");
+                    throw new FormatException($"{I18n.GetString("td.invalidsecret")} ({issuer})");
                 }
 
                 DBTOTPToken dbToken =
@@ -146,7 +146,7 @@ namespace Guard.WPF.Core.Import.Importer
                         "SHA256" => TOTPAlgorithm.SHA256,
                         "SHA512" => TOTPAlgorithm.SHA512,
                         _
-                            => throw new Exception(
+                            => throw new FormatException(
                                 $"Invalid 2FAS backup: Unsupported algorithm {service.OTP.Algorithm}"
                             ),
                     };
@@ -183,13 +183,13 @@ namespace Guard.WPF.Core.Import.Importer
             byte[] data = File.ReadAllBytes(path);
             if (data.Length == 0)
             {
-                throw new Exception("The 2FAS backup file does not contain any data.");
+                throw new FormatException("The 2FAS backup file does not contain any data.");
             }
 
             var json = Encoding.UTF8.GetString(data);
             var backup =
                 JsonSerializer.Deserialize<TwoFasBackup>(json, jsonSerializerOptions)
-                ?? throw new Exception(
+                ?? throw new FormatException(
                     "Failed to parse the 2FAS backup file. JSON deserialization failed."
                 );
 
@@ -222,7 +222,7 @@ namespace Guard.WPF.Core.Import.Importer
 
             if (!Aes256Gcm.IsSupported)
             {
-                throw new Exception(
+                throw new FormatException(
                     "AES256-GCM is not supported on this platform. The reason may be that your CPU does not support hardware-accelerated AES256-GCM encryption."
                 );
             }
@@ -232,7 +232,7 @@ namespace Guard.WPF.Core.Import.Importer
 
             byte[]? decryptedData =
                 aes.Decrypt(key, iv, null, encryptedData)
-                ?? throw new Exception(I18n.GetString("import.password.invalid"));
+                ?? throw new FormatException(I18n.GetString("import.password.invalid"));
             return JsonSerializer.Deserialize<TwoFasBackup.Service[]>(
                 Encoding.UTF8.GetString(decryptedData),
                 jsonSerializerOptions
