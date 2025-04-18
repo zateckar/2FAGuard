@@ -1,3 +1,5 @@
+[![Quality gate](https://sonarcloud.io/api/project_badges/quality_gate?project=zateckar_2FAGuard)](https://sonarcloud.io/summary/new_code?id=zateckar_2FAGuard)
+
 # 2FAGuard - TOTP Authenticator
 
 A modern and secure Windows app for managing your 2FA authentification codes.
